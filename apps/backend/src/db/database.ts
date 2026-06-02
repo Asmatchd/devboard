@@ -1,23 +1,23 @@
-import { Kysely, PostgresDialect } from "kysely";
+import { Kysely, PostgresDialect, Generated, ColumnType } from "kysely";
 import { Pool } from "pg";
 import { env } from "../config/env";
 
 interface TaskTable {
-  id: string;
+  id: Generated<string>;
   title: string;
   description: string | null;
-  status: "todo" | "in_progress" | "done";
+  status: ColumnType<"todo" | "in_progress" | "done", "todo" | "in_progress" | "done" | undefined, "todo" | "in_progress" | "done">;
   assignee_id: string | null;
-  created_at: Date;
-  updated_at: Date;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
 }
 
 interface UserTable {
-  id: string;
+  id: Generated<string>;
   email: string;
   name: string;
   password_hash: string;
-  created_at: Date;
+  created_at: Generated<Date>;
 }
 
 export interface Database {
