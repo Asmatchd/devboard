@@ -21,8 +21,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@devboard/shared": ["../../packages/shared/src/index.ts"]
-    }
+  "@devboard/shared": ["../../packages/shared/src/types.ts"]
+}
   },
   "include": ["src"]
 }

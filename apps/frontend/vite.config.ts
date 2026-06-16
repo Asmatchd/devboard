@@ -10,7 +10,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@devboard/shared": resolve(__dirname, "../../packages/shared/src/index.ts"),
+      "@devboard/shared": resolve(__dirname, "../../packages/shared/src/types.ts"),
     },
   },
   server: {
