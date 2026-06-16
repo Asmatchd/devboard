@@ -105,16 +105,30 @@ export function CreateTaskModal({
           >
             Status
           </label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as TaskStatus)}
-            className="w-full rounded-lg text-sm bg-(--color-surface-raised) border border-(--color-border) text-(--color-text-primary) outline-none focus:border-(--color-accent) cursor-pointer"
-            style={{ padding: "12px 14px" }}
-          >
-            <option value="todo">To Do</option>
-            <option value="in_progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
+          <div className="relative">
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as TaskStatus)}
+              className="w-full rounded-lg text-sm bg-(--color-surface-raised) border border-(--color-border) text-(--color-text-primary) outline-none focus:border-(--color-accent) cursor-pointer appearance-none"
+              style={{ padding: "12px 40px 12px 14px" }}
+            >
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+            {/* Custom arrow */}
+            <div
+              className="absolute pointer-events-none text-(--color-text-muted)"
+              style={{
+                right: "14px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                fontSize: "12px",
+              }}
+            >
+              ▼
+            </div>
+          </div>
         </div>
 
         <div className="flex" style={{ gap: "12px", paddingTop: "4px" }}>
