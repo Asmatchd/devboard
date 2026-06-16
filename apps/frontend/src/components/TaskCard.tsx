@@ -23,12 +23,12 @@ export function TaskCard({ task, provided }: TaskCardProps) {
       ref={(ref) => provided.innerRef(ref)}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      className="group bg-[var(--color-surface)] border border-[var(--color-border-subtle)] hover:border-[var(--color-border)] rounded-xl cursor-grab active:cursor-grabbing transition-all duration-150 hover:shadow-lg hover:shadow-black/20"
+      className="group bg-(--color-surface) border border-(--color-border-subtle) hover:border-(--color-border) rounded-xl cursor-grab active:cursor-grabbing transition-all duration-150 hover:shadow-lg hover:shadow-black/20"
       style={{ padding: "16px 18px" }}
     >
       <div className="flex items-start justify-between" style={{ gap: "12px" }}>
         <h3
-          className="font-medium text-[var(--color-text-primary)]"
+          className="font-medium text-(--color-text-primary)"
           style={{ fontSize: "14px", lineHeight: "1.5", flex: 1 }}
         >
           {task.title}
@@ -37,7 +37,7 @@ export function TaskCard({ task, provided }: TaskCardProps) {
           variant="ghost"
           size="sm"
           onClick={handleDelete}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--color-text-muted)] hover:text-[var(--color-danger)] cursor-pointer"
+          className="opacity-0 group-hover:opacity-100 transition-opacity text-(--color-text-muted) hover:text-(--color-danger) cursor-pointer"
         >
           ✕
         </Button>
@@ -45,7 +45,7 @@ export function TaskCard({ task, provided }: TaskCardProps) {
 
       {task.description && (
         <p
-          className="text-[var(--color-text-muted)]"
+          className="text-(--color-text-muted)"
           style={{
             fontSize: "13px",
             marginTop: "8px",
@@ -66,7 +66,7 @@ export function TaskCard({ task, provided }: TaskCardProps) {
       >
         <Badge status={task.status} />
         <span
-          className="text-[var(--color-text-muted)]"
+          className="text-(--color-text-muted)"
           style={{ fontSize: "12px" }}
         >
           {new Date(task.createdAt).toLocaleDateString("en-FI", {

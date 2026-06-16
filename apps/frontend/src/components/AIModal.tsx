@@ -48,7 +48,7 @@ export function AIModal({ onClose }: AIModalProps) {
     <Modal title="✨ AI Task Breakdown" onClose={onClose}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-[var(--color-text-secondary)]">
+          <label className="text-sm font-medium text-(--color-text-secondary)">
             Describe your goal
           </label>
           <textarea
@@ -56,7 +56,7 @@ export function AIModal({ onClose }: AIModalProps) {
             onChange={(e) => setGoal(e.target.value)}
             placeholder="e.g. Build a user authentication system with JWT..."
             rows={3}
-            className="w-full rounded-lg text-sm bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none transition-all duration-150 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 resize-none"
+            className="w-full rounded-lg text-sm bg-(--color-surface-raised) border border-(--color-border) text-(--color-text-primary) placeholder:text-(--color-text-muted) outline-none transition-all duration-150 focus:border-(--color-accent) focus:ring-2 focus:ring-(--color-accent)/20 resize-none"
             style={{ padding: "12px 14px" }}
           />
         </div>
@@ -71,20 +71,20 @@ export function AIModal({ onClose }: AIModalProps) {
 
         {tasks.length > 0 && (
           <div className="flex flex-col gap-2">
-            <p className="text-xs text-[var(--color-text-secondary)] font-medium">
+            <p className="text-xs text-(--color-text-secondary) font-medium">
               {tasks.length} tasks generated
             </p>
             <div className="flex flex-col gap-2 max-h-52 overflow-y-auto">
               {tasks.map((task, i) => (
                 <div
                   key={i}
-                  className="p-3 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)]"
+                  className="p-3 rounded-lg bg-(--color-surface-raised) border border-(--color-border-subtle)"
                 >
-                  <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  <p className="text-sm font-medium text-(--color-text-primary)">
                     {task.title}
                   </p>
                   {task.description && (
-                    <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                    <p className="text-xs text-(--color-text-muted) mt-1">
                       {task.description}
                     </p>
                   )}

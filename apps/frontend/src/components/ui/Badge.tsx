@@ -7,21 +7,19 @@ interface BadgeProps {
 const config = {
   todo: {
     label: "To Do",
-    color:
-      "text-[var(--color-todo)] bg-[var(--color-todo)]/10 border-[var(--color-todo)]/20",
-    dot: "bg-[var(--color-todo)]",
+    color: "text-(--color-todo) bg-(--color-todo)/10 border-(--color-todo)/20",
+    dot: "bg-(--color-todo)",
   },
   in_progress: {
     label: "In Progress",
     color:
-      "text-[var(--color-in-progress)] bg-[var(--color-in-progress)]/10 border-[var(--color-in-progress)]/20",
-    dot: "bg-[var(--color-in-progress)]",
+      "text-(--color-in-progress) bg-(--color-in-progress)/10 border-(--color-in-progress)/20",
+    dot: "bg-(--color-in-progress)",
   },
   done: {
     label: "Done",
-    color:
-      "text-[var(--color-done)] bg-[var(--color-done)]/10 border-[var(--color-done)]/20",
-    dot: "bg-[var(--color-done)]",
+    color: "text-(--color-done) bg-(--color-done)/10 border-(--color-done)/20",
+    dot: "bg-(--color-done)",
   },
 };
 

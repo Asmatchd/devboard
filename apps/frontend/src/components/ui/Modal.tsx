@@ -26,23 +26,23 @@ export function Modal({ title, onClose, children }: ModalProps) {
         onClick={onClose}
       />
       <div
-        className="relative w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-2xl"
+        className="relative w-full bg-(--color-surface) border border-(--color-border) rounded-2xl shadow-2xl"
         style={{ maxWidth: "520px" }}
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between border-b border-[var(--color-border-subtle)]"
+          className="flex items-center justify-between border-b border-(--color-border-subtle)"
           style={{ padding: "24px 28px" }}
         >
           <h2
-            className="font-semibold text-[var(--color-text-primary)]"
+            className="font-semibold text-(--color-text-primary)"
             style={{ fontSize: "17px" }}
           >
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+            className="text-(--color-text-muted) hover:text-(--color-text-primary) transition-colors cursor-pointer"
             style={{ fontSize: "20px", lineHeight: 1, padding: "4px" }}
           >
             ✕

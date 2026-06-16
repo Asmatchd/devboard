@@ -22,13 +22,13 @@ export function Button({
 
   const variants = {
     primary:
-      "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white shadow-lg shadow-indigo-500/20",
+      "bg-(--color-accent) hover:bg-(--color-accent-hover) text-white shadow-lg shadow-indigo-500/20",
     secondary:
-      "bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] border border-[var(--color-border)]",
+      "bg-(--color-surface) hover:bg-(--color-surface-raised) text-(--color-text-secondary) hover:text-(--color-text-primary) border border-(--color-border)",
     ghost:
-      "hover:bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
+      "hover:bg-(--color-surface-raised) text-(--color-text-secondary) hover:text-(--color-text-primary)",
     danger:
-      "bg-[var(--color-danger)]/10 hover:bg-[var(--color-danger)]/20 text-[var(--color-danger)] border border-[var(--color-danger)]/30",
+      "bg-(--color-danger)/10 hover:bg-(--color-danger)/20 text-(--color-danger) border border-(--color-danger)/30",
   };
 
   const sizes = {

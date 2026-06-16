@@ -46,17 +46,17 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-background)">
       {/* Background glow */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--color-accent)]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-(--color-accent)/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative w-full px-4" style={{ maxWidth: "480px" }}>
         {/* Logo */}
         <div className="text-center" style={{ marginBottom: "48px" }}>
           <div
-            className="inline-flex items-center justify-center rounded-2xl bg-[var(--color-accent)] shadow-lg shadow-indigo-500/30"
+            className="inline-flex items-center justify-center rounded-2xl bg-(--color-accent) shadow-lg shadow-indigo-500/30"
             style={{ width: "64px", height: "64px", marginBottom: "20px" }}
           >
             <span className="text-white font-bold" style={{ fontSize: "28px" }}>
@@ -64,13 +64,13 @@ export function LoginPage() {
             </span>
           </div>
           <h1
-            className="font-bold text-[var(--color-text-primary)]"
+            className="font-bold text-(--color-text-primary)"
             style={{ fontSize: "32px" }}
           >
             DevBoard
           </h1>
           <p
-            className="text-[var(--color-text-secondary)]"
+            className="text-(--color-text-secondary)"
             style={{ fontSize: "15px", marginTop: "8px" }}
           >
             {mode === "login"
@@ -81,7 +81,7 @@ export function LoginPage() {
 
         {/* Card */}
         <div
-          className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-2xl"
+          className="bg-(--color-surface) border border-(--color-border) rounded-2xl shadow-2xl"
           style={{ padding: "40px" }}
         >
           <form
@@ -121,7 +121,7 @@ export function LoginPage() {
 
             {error && (
               <div
-                className="flex items-center gap-3 text-[var(--color-danger)] bg-[var(--color-danger)]/10 border border-[var(--color-danger)]/20 rounded-lg"
+                className="flex items-center gap-3 text-(--color-danger) bg-(--color-danger)/10 border border-(--color-danger)/20 rounded-lg"
                 style={{ padding: "12px 16px" }}
               >
                 <span style={{ fontSize: "16px" }}>⚠️</span>
@@ -140,7 +140,7 @@ export function LoginPage() {
           </form>
 
           <div
-            className="text-center border-t border-[var(--color-border-subtle)]"
+            className="text-center border-t border-(--color-border-subtle)"
             style={{ marginTop: "28px", paddingTop: "24px" }}
           >
             <button
@@ -148,7 +148,7 @@ export function LoginPage() {
                 setMode(mode === "login" ? "register" : "login");
                 setError("");
               }}
-              className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors cursor-pointer"
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-accent) transition-colors cursor-pointer"
             >
               {mode === "login"
                 ? "Don't have an account? Sign up"

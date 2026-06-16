@@ -12,16 +12,16 @@ interface TaskColumnProps {
 
 const columnStyles: Record<TaskStatus, { dot: string; count: string }> = {
   todo: {
-    dot: "bg-[var(--color-todo)]",
-    count: "bg-[var(--color-todo)]/10 text-[var(--color-todo)]",
+    dot: "bg-(--color-todo)",
+    count: "bg-(--color-todo)/10 text-(--color-todo)",
   },
   in_progress: {
-    dot: "bg-[var(--color-in-progress)]",
-    count: "bg-[var(--color-in-progress)]/10 text-[var(--color-in-progress)]",
+    dot: "bg-(--color-in-progress)",
+    count: "bg-(--color-in-progress)/10 text-(--color-in-progress)",
   },
   done: {
-    dot: "bg-[var(--color-done)]",
-    count: "bg-[var(--color-done)]/10 text-[var(--color-done)]",
+    dot: "bg-(--color-done)",
+    count: "bg-(--color-done)/10 text-(--color-done)",
   },
 };
 
@@ -37,7 +37,7 @@ export function TaskColumn({ id, title, tasks, onAddTask }: TaskColumnProps) {
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${styles.dot}`} />
-          <span className="text-sm font-semibold text-[var(--color-text-primary)]">
+          <span className="text-sm font-semibold text-(--color-text-primary)">
             {title}
           </span>
           <span
@@ -50,7 +50,7 @@ export function TaskColumn({ id, title, tasks, onAddTask }: TaskColumnProps) {
           variant="ghost"
           size="sm"
           onClick={onAddTask}
-          className="w-6 h-6 flex items-center justify-center rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-raised)] transition-all cursor-pointer text-lg leading-none"
+          className="w-6 h-6 flex items-center justify-center rounded-md text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-surface-raised) transition-all cursor-pointer text-lg leading-none"
         >
           +
         </Button>
@@ -64,8 +64,8 @@ export function TaskColumn({ id, title, tasks, onAddTask }: TaskColumnProps) {
             {...provided.droppableProps}
             className={`flex flex-col gap-2 min-h-[200px] p-2 rounded-xl transition-colors duration-150 ${
               snapshot.isDraggingOver
-                ? "bg-[var(--color-accent)]/5 border border-dashed border-[var(--color-accent)]/30"
-                : "bg-[var(--color-surface-raised)]/50 border border-transparent"
+                ? "bg-(--color-accent)/5 border border-dashed border-(--color-accent)/30"
+                : "bg-(--color-surface-raised)/50 border border-transparent"
             }`}
           >
             {tasks.map((task, index) => (
@@ -77,7 +77,7 @@ export function TaskColumn({ id, title, tasks, onAddTask }: TaskColumnProps) {
 
             {tasks.length === 0 && !snapshot.isDraggingOver && (
               <div className="flex-1 flex items-center justify-center py-8">
-                <p className="text-xs text-[var(--color-text-muted)]">
+                <p className="text-xs text-(--color-text-muted)">
                   No tasks yet
                 </p>
               </div>

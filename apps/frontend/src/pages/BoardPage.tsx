@@ -56,7 +56,7 @@ export function BoardPage() {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-2 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-(--color-accent) border-t-transparent rounded-full animate-spin" />
         </div>
       </Layout>
     );
@@ -71,13 +71,13 @@ export function BoardPage() {
       >
         <div>
           <h1
-            className="font-bold text-[var(--color-text-primary)]"
+            className="font-bold text-(--color-text-primary)"
             style={{ fontSize: "28px" }}
           >
             Board
           </h1>
           <p
-            className="text-[var(--color-text-secondary)]"
+            className="text-(--color-text-secondary)"
             style={{ fontSize: "14px", marginTop: "6px" }}
           >
             {tasks.length} task{tasks.length !== 1 ? "s" : ""} total
@@ -88,7 +88,7 @@ export function BoardPage() {
             variant="ghost"
             size="sm"
             onClick={() => setAiModal(true)}
-            className="flex items-center text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg transition-all cursor-pointer"
+            className="flex items-center text-(--color-text-secondary) hover:text-(--color-text-primary) bg-(--color-surface) hover:bg-(--color-surface-raised) border border-(--color-border) rounded-lg transition-all cursor-pointer"
             style={{ padding: "8px 16px", fontSize: "14px", gap: "6px" }}
           >
             ✨ AI Breakdown
@@ -98,7 +98,7 @@ export function BoardPage() {
             variant="ghost"
             size="sm"
             onClick={() => setCreateModal("todo")}
-            className="flex items-center bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white rounded-lg transition-all cursor-pointer shadow-lg shadow-indigo-500/20"
+            className="flex items-center bg-(--color-accent) hover:bg-(--color-accent-hover) text-white rounded-lg transition-all cursor-pointer shadow-lg shadow-indigo-500/20"
             style={{
               padding: "8px 18px",
               fontSize: "14px",

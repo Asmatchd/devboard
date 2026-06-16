@@ -10,10 +10,10 @@ export function Layout({ children }: LayoutProps) {
   const { user, logout } = useAuthStore();
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)]">
+    <div className="min-h-screen bg-(--color-background)">
       {/* Navbar */}
       <header
-        className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface)]/80 backdrop-blur-sm sticky top-0 z-40"
+        className="border-b border-(--color-border-subtle) bg-(--color-surface)/80 backdrop-blur-sm sticky top-0 z-40"
         style={{ height: "60px" }}
       >
         <div
@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
         >
           <div className="flex items-center" style={{ gap: "12px" }}>
             <div
-              className="rounded-lg bg-[var(--color-accent)] flex items-center justify-center shadow-md shadow-indigo-500/30"
+              className="rounded-lg bg-(--color-accent) flex items-center justify-center shadow-md shadow-indigo-500/30"
               style={{ width: "32px", height: "32px" }}
             >
               <span
@@ -33,7 +33,7 @@ export function Layout({ children }: LayoutProps) {
               </span>
             </div>
             <span
-              className="font-semibold text-[var(--color-text-primary)]"
+              className="font-semibold text-(--color-text-primary)"
               style={{ fontSize: "16px" }}
             >
               DevBoard
@@ -43,7 +43,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex items-center" style={{ gap: "16px" }}>
             {user && (
               <span
-                className="text-[var(--color-text-secondary)]"
+                className="text-(--color-text-secondary)"
                 style={{ fontSize: "14px" }}
               >
                 {user.name}

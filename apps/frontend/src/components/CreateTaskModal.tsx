@@ -68,7 +68,7 @@ export function CreateTaskModal({
         <div className="flex flex-col" style={{ gap: "8px" }}>
           <div className="flex items-center justify-between">
             <label
-              className="font-medium text-[var(--color-text-secondary)]"
+              className="font-medium text-(--color-text-secondary)"
               style={{ fontSize: "14px" }}
             >
               Description
@@ -77,7 +77,7 @@ export function CreateTaskModal({
               type="button"
               onClick={handleGenerateDescription}
               disabled={!title.trim() || aiLoading}
-              className="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer flex items-center"
+              className="text-(--color-accent) hover:text-(--color-accent-hover) disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer flex items-center"
               style={{ fontSize: "13px", gap: "4px" }}
             >
               {aiLoading ? (
@@ -93,14 +93,14 @@ export function CreateTaskModal({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional description..."
             rows={3}
-            className="w-full rounded-lg text-sm bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none transition-all duration-150 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 resize-none"
+            className="w-full rounded-lg text-sm bg-(--color-surface-raised) border border-(--color-border) text-(--color-text-primary) placeholder:text-(--color-text-muted) outline-none transition-all duration-150 focus:border-(--color-accent) focus:ring-2 focus:ring-(--color-accent)/20 resize-none"
             style={{ padding: "12px 14px" }}
           />
         </div>
 
         <div className="flex flex-col" style={{ gap: "8px" }}>
           <label
-            className="font-medium text-[var(--color-text-secondary)]"
+            className="font-medium text-(--color-text-secondary)"
             style={{ fontSize: "14px" }}
           >
             Status
@@ -108,7 +108,7 @@ export function CreateTaskModal({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as TaskStatus)}
-            className="w-full rounded-lg text-sm bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-accent)] cursor-pointer"
+            className="w-full rounded-lg text-sm bg-(--color-surface-raised) border border-(--color-border) text-(--color-text-primary) outline-none focus:border-(--color-accent) cursor-pointer"
             style={{ padding: "12px 14px" }}
           >
             <option value="todo">To Do</option>
