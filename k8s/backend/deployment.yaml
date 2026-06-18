@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2              # Start with 2 replicas — load balanced automatically
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: devboard-backend:latest
+          imagePullPolicy: Never   # Use local image from Minikube
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: backend-config
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
+          # Liveness probe — restart pod if it stops responding
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          # Readiness probe — only send traffic when pod is ready
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          # Resource limits — required for HPA to work
+          resources:
+            requests:
+              cpu: 100m        # 0.1 CPU core
+              memory: 128Mi
+            limits:
+              cpu: 500m        # Max 0.5 CPU core
+              memory: 256Mi

@@ -1,0 +1,9 @@
+# ConfigMap stores non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  PORT: "3001"
+  NODE_ENV: production
+  DATABASE_URL: postgresql://postgres:password@postgres:5432/devboard
