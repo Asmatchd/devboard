@@ -4,15 +4,25 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --parallel -r dev",
+    "dev:db": "docker compose up postgres -d",
+    "dev:backend": "pnpm --filter @devboard/backend dev",
+    "dev:frontend": "pnpm --filter @devboard/frontend dev",
+    "dev:all": "docker compose up postgres -d && pnpm --parallel --filter @devboard/backend --filter @devboard/frontend dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "docker:up": "docker compose up",
     "docker:build": "docker compose build",
+    "docker:up": "docker compose up",
     "docker:down": "docker compose down",
     "docker:restart": "docker compose down && docker compose build && docker compose up",
     "docker:logs": "docker compose logs -f",
-    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
+    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
+    "k8s:start": "minikube start --driver=docker --cpus=4 --memory=6144",
+    "k8s:stop": "minikube stop",
+    "k8s:status": "kubectl get pods",
+    "k8s:tunnel": "sudo minikube tunnel",
+    "k8s:deploy": "kubectl apply -f k8s/postgres/ && kubectl apply -f k8s/backend/ && kubectl apply -f k8s/frontend/ && kubectl apply -f k8s/ingress/",
+    "k8s:delete": "kubectl delete -f k8s/ingress/ && kubectl delete -f k8s/frontend/ && kubectl delete -f k8s/backend/ && kubectl delete -f k8s/postgres/"
   },
   "devDependencies": {
     "typescript": "^6.0.3",
