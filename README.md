@@ -6,11 +6,12 @@ A full-stack kanban-style task management application built with modern technolo
 
 ## ✨ Features
 
-- **Kanban Board** — drag and drop tasks across To Do, In Progress and Done columns
-- **Authentication** — JWT-based register and login
-- **AI Integration** — generate task descriptions and break down goals into tasks using Claude AI
-- **Real-time updates** — optimistic UI updates with TanStack Query
-- **Production ready** — Dockerized, Kubernetes deployed with load balancing and autoscaling
+- **Kanban Board** — drag and drop tasks across To Do, In Progress and Done columns with same-column reordering
+- **Authentication** — JWT-based register and login with persistent sessions
+- **Task Management** — create, edit and delete tasks with title, description and status
+- **AI Integration** — generate task descriptions and break down goals into tasks using Claude AI (claude-sonnet-4-6)
+- **Optimistic UI** — instant drag and drop updates with automatic rollback on failure
+- **Production Ready** — Dockerized, Kubernetes deployed with load balancing, autoscaling and health checks
 
 ## 🏗 Architecture
 
@@ -36,15 +37,16 @@ graph TB
 
 ### Frontend
 
-| Technology            | Purpose                   |
-| --------------------- | ------------------------- |
-| React 19 + TypeScript | UI framework              |
-| Vite 8                | Build tool and dev server |
-| Tailwind CSS 4        | Styling                   |
-| TanStack Query        | Data fetching and caching |
-| Zustand               | Global state management   |
-| @hello-pangea/dnd     | Drag and drop             |
-| React Router          | Client-side routing       |
+| Technology            | Purpose                                         |
+| --------------------- | ----------------------------------------------- |
+| React 19 + TypeScript | UI framework                                    |
+| Vite 8                | Build tool and dev server                       |
+| Tailwind CSS 4        | Styling with CSS custom properties              |
+| TanStack Query        | Data fetching, caching and optimistic updates   |
+| Zustand               | Global auth state with localStorage persistence |
+| @dnd-kit              | Drag and drop (React 19 compatible)             |
+| React Router 7        | Client-side routing with protected routes       |
+| Axios                 | HTTP client with JWT interceptors               |
 
 ### Backend
 
@@ -92,12 +94,22 @@ devboard/
 
 ## 🚀 Getting Started
 
-### Prerequisites
+## Prerequisites
 
 - Node.js 24+
 - pnpm 11+
 - Docker Desktop
-- kubectl + Minikube (for Kubernetes)
+- kubectl + Minikube (for Kubernetes deployment)
+- Anthropic API key (optional — for AI features)
+
+## 🤖 AI Features
+
+DevBoard integrates with Anthropic's Claude API for two features:
+
+- **Generate Description** — type a task title and click ✨ AI Generate to get a detailed description
+- **Goal Breakdown** — describe a high-level goal and Claude breaks it into up to 6 actionable tasks
+
+To enable AI features, add your Anthropic API key to `apps/backend/.env`:
 
 ### Local Development
 
@@ -143,7 +155,7 @@ pnpm dev:all
 
 Open `http://localhost:5173`
 
-**Test credentials:**
+**Test credentials (after running seed):**
 
 - Email: `test@devboard.com`
 - Password: `password123`
