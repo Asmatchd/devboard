@@ -8,7 +8,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   JWT_SECRET: z.string(),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-  ANTHROPIC_API_KEY: z.string().optional(),
+  ANTHROPIC_API_KEY: z.string(),
 });
 
 const parsed = envSchema.safeParse(process.env);

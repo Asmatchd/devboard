@@ -2,9 +2,8 @@ import { Response } from "express";
 import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import { env } from "../config/env";
-import { AuthRequest } from "../middleware/auth";
+import type { AuthRequest } from "../middleware/auth";
 
-// Initialize client lazily — only when API key is available
 function getClient(): Anthropic {
   if (!env.ANTHROPIC_API_KEY) {
     throw new Error("ANTHROPIC_API_KEY is not configured");
@@ -26,7 +25,7 @@ export async function generateTaskDescription(req: AuthRequest, res: Response): 
   const client = getClient();
 
   const message = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-6",
     max_tokens: 300,
     messages: [
       {
@@ -50,7 +49,7 @@ export async function breakdownTask(req: AuthRequest, res: Response): Promise<vo
   const client = getClient();
 
   const message = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-6",
     max_tokens: 800,
     messages: [
       {
