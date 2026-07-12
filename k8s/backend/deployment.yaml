@@ -27,6 +27,11 @@ spec:
                 secretKeyRef:
                   name: backend-secret
                   key: JWT_SECRET
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                    name: backend-secret
+                    key: ANTHROPIC_API_KEY
           # Liveness probe — restart pod if it stops responding
           livenessProbe:
             httpGet:
