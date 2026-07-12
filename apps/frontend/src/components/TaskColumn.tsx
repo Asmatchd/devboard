@@ -1,5 +1,9 @@
 import type { Task, TaskStatus } from "@devboard/shared";
-import { Droppable, Draggable } from "@hello-pangea/dnd";
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { TaskCard } from "./TaskCard";
 import { Button } from "./ui/Button";
 
@@ -8,6 +12,7 @@ interface TaskColumnProps {
   title: string;
   tasks: Task[];
   onAddTask: () => void;
+  isOver: boolean;
 }
 
 const columnStyles: Record<TaskStatus, { dot: string; count: string }> = {
@@ -25,23 +30,45 @@ const columnStyles: Record<TaskStatus, { dot: string; count: string }> = {
   },
 };
 
-export function TaskColumn({ id, title, tasks, onAddTask }: TaskColumnProps) {
+export function TaskColumn({
+  id,
+  title,
+  tasks,
+  onAddTask,
+  isOver,
+}: TaskColumnProps) {
   const styles = columnStyles[id];
+  const { setNodeRef } = useDroppable({ id });
 
   return (
     <div
-      className="flex flex-col flex-1"
-      style={{ minWidth: "300px", maxWidth: "400px" }}
+      className="flex flex-col"
+      style={{
+        minWidth: "300px",
+        maxWidth: "400px",
+        flex: 1,
+        minHeight: "calc(100vh - 220px)",
+      }}
     >
       {/* Column header */}
-      <div className="flex items-center justify-between mb-3 px-1">
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${styles.dot}`} />
-          <span className="text-sm font-semibold text-(--color-text-primary)">
+      <div
+        className="flex items-center justify-between"
+        style={{ marginBottom: "12px", padding: "0 4px" }}
+      >
+        <div className="flex items-center" style={{ gap: "8px" }}>
+          <span
+            className={`rounded-full ${styles.dot}`}
+            style={{ width: "8px", height: "8px" }}
+          />
+          <span
+            className="font-semibold text-(--color-text-primary)"
+            style={{ fontSize: "14px" }}
+          >
             {title}
           </span>
           <span
-            className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${styles.count}`}
+            className={`font-medium rounded-full ${styles.count}`}
+            style={{ fontSize: "12px", padding: "2px 8px" }}
           >
             {tasks.length}
           </span>
@@ -57,34 +84,47 @@ export function TaskColumn({ id, title, tasks, onAddTask }: TaskColumnProps) {
       </div>
 
       {/* Droppable area */}
-      <Droppable droppableId={id}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className={`flex flex-col gap-2 min-h-[200px] p-2 rounded-xl transition-colors duration-150 ${
-              snapshot.isDraggingOver
-                ? "bg-(--color-accent)/5 border border-dashed border-(--color-accent)/30"
-                : "bg-(--color-surface-raised)/50 border border-transparent"
-            }`}
-          >
-            {tasks.map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided) => <TaskCard task={task} provided={provided} />}
-              </Draggable>
-            ))}
-            {provided.placeholder}
+      <div
+        ref={setNodeRef}
+        className="flex flex-col rounded-xl transition-all duration-150"
+        style={{
+          gap: "8px",
+          flex: 1,
+          padding: "8px",
+          background: isOver
+            ? "color-mix(in srgb, var(--color-accent) 8%, transparent)"
+            : "color-mix(in srgb, var(--color-surface-raised) 50%, transparent)",
+          border: isOver
+            ? "1px dashed var(--color-accent)"
+            : "1px solid transparent",
+          boxShadow: isOver
+            ? "inset 0 0 0 2px color-mix(in srgb, var(--color-accent) 20%, transparent)"
+            : "none",
+        }}
+      >
+        <SortableContext
+          items={tasks.map((t) => t.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {tasks.map((task) => (
+            <TaskCard key={task.id} task={task} />
+          ))}
+        </SortableContext>
 
-            {tasks.length === 0 && !snapshot.isDraggingOver && (
-              <div className="flex-1 flex items-center justify-center py-8">
-                <p className="text-xs text-(--color-text-muted)">
-                  No tasks yet
-                </p>
-              </div>
-            )}
+        {tasks.length === 0 && !isOver && (
+          <div
+            className="flex items-center justify-center"
+            style={{ padding: "32px 0" }}
+          >
+            <p
+              className="text-(--color-text-muted)"
+              style={{ fontSize: "13px" }}
+            >
+              No tasks yet
+            </p>
           </div>
         )}
-      </Droppable>
+      </div>
     </div>
   );
 }

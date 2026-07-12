@@ -1,7 +1,19 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { DragDropContext } from "@hello-pangea/dnd";
-import type { DropResult } from "@hello-pangea/dnd";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCorners,
+} from "@dnd-kit/core";
+import type {
+  DragEndEvent,
+  DragStartEvent,
+  DragOverEvent,
+} from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import type { Task, TaskStatus } from "@devboard/shared";
 import { Layout } from "../components/Layout";
 import { TaskColumn } from "../components/TaskColumn";
@@ -9,7 +21,6 @@ import { CreateTaskModal } from "../components/CreateTaskModal";
 import { AIModal } from "../components/AIModal";
 import { Button } from "../components/ui/Button";
 import { taskService } from "../services/tasks";
-import { useQueryClient } from "@tanstack/react-query";
 
 const COLUMNS: { id: TaskStatus; title: string }[] = [
   { id: "todo", title: "To Do" },
@@ -21,6 +32,16 @@ export function BoardPage() {
   const queryClient = useQueryClient();
   const [createModal, setCreateModal] = useState<TaskStatus | null>(null);
   const [aiModal, setAiModal] = useState(false);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [overColumnId, setOverColumnId] = useState<TaskStatus | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+  );
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
@@ -30,26 +51,75 @@ export function BoardPage() {
   const getTasksByStatus = (status: TaskStatus): Task[] =>
     tasks.filter((t) => t.status === status);
 
-  const handleDragEnd = async (result: DropResult) => {
-    if (!result.destination) return;
+  const getColumnFromOverId = (overId: string): TaskStatus | null => {
+    const isColumn = COLUMNS.some((col) => col.id === overId);
+    if (isColumn) return overId as TaskStatus;
+    const overTask = tasks.find((t) => t.id === overId);
+    if (overTask) return overTask.status;
+    return null;
+  };
 
-    const newStatus = result.destination.droppableId as TaskStatus;
-    const taskId = result.draggableId;
-    const task = tasks.find((t) => t.id === taskId);
+  const handleDragStart = (event: DragStartEvent) => {
+    const task = tasks.find((t) => t.id === event.active.id);
+    if (task) setActiveTask(task);
+  };
 
-    if (!task || task.status === newStatus) return;
-
-    // Optimistic update
-    queryClient.setQueryData<Task[]>(["tasks"], (old = []) =>
-      old.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)),
-    );
-
-    try {
-      await taskService.update(taskId, { status: newStatus });
-    } catch {
-      // Rollback on failure
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+  const handleDragOver = (event: DragOverEvent) => {
+    const { over } = event;
+    if (!over) {
+      setOverColumnId(null);
+      return;
     }
+    const columnId = getColumnFromOverId(over.id as string);
+    setOverColumnId(columnId);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveTask(null);
+    const { active, over } = event;
+    const newStatus = overColumnId;
+    setOverColumnId(null);
+
+    if (!over || !newStatus) return;
+
+    const taskId = active.id as string;
+    const overId = over.id as string;
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    const isSameColumn = task.status === newStatus;
+    const isOverACard = tasks.some((t) => t.id === overId);
+
+    if (isSameColumn && isOverACard) {
+      // Reorder within same column — purely visual, no API call needed
+      const columnTasks = tasks.filter((t) => t.status === task.status);
+      const oldIndex = columnTasks.findIndex((t) => t.id === taskId);
+      const newIndex = columnTasks.findIndex((t) => t.id === overId);
+
+      if (oldIndex === newIndex) return;
+
+      const reordered = arrayMove(columnTasks, oldIndex, newIndex);
+      const otherTasks = tasks.filter((t) => t.status !== task.status);
+      queryClient.setQueryData<Task[]>(
+        ["tasks"],
+        [...reordered, ...otherTasks],
+      );
+      return;
+    }
+
+    if (isSameColumn) return;
+
+    // Move to different column
+    const updatedTasks = tasks.map((t) =>
+      t.id === taskId ? { ...t, status: newStatus } : t,
+    );
+    queryClient.setQueryData<Task[]>(["tasks"], updatedTasks);
+
+    // Fire API call in background
+    taskService.update(taskId, { status: newStatus }).catch(() => {
+      // Rollback on failure
+      queryClient.setQueryData<Task[]>(["tasks"], tasks);
+    });
   };
 
   if (isLoading) {
@@ -112,14 +182,17 @@ export function BoardPage() {
       </div>
 
       {/* Kanban board */}
-      <DragDropContext onDragEnd={handleDragEnd}>
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
         <div
           className="flex overflow-x-auto"
-          style={{
-            gap: "24px",
-            paddingBottom: "40px",
-            alignItems: "flex-start",
-          }}
+          style={{ gap: "24px", paddingBottom: "40px", alignItems: "stretch" }}
         >
           {COLUMNS.map((col) => (
             <TaskColumn
@@ -128,10 +201,27 @@ export function BoardPage() {
               title={col.title}
               tasks={getTasksByStatus(col.id)}
               onAddTask={() => setCreateModal(col.id)}
+              isOver={overColumnId === col.id}
             />
           ))}
         </div>
-      </DragDropContext>
+
+        <DragOverlay>
+          {activeTask ? (
+            <div
+              className="bg-(--color-surface) border border-(--color-accent) rounded-xl shadow-2xl opacity-90"
+              style={{ padding: "16px 18px" }}
+            >
+              <p
+                className="font-medium text-(--color-text-primary)"
+                style={{ fontSize: "14px" }}
+              >
+                {activeTask.title}
+              </p>
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
 
       {createModal && (
         <CreateTaskModal
