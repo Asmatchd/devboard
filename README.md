@@ -65,14 +65,15 @@ graph TB
 
 ### Infrastructure
 
-| Technology              | Purpose                        |
-| ----------------------- | ------------------------------ |
-| Docker + Docker Compose | Containerization and local dev |
-| Kubernetes + Minikube   | Container orchestration        |
-| NGINX Ingress           | Load balancing and routing     |
-| HorizontalPodAutoscaler | Auto-scaling                   |
-| GitHub Actions          | CI/CD pipeline                 |
-| pnpm workspaces         | Monorepo management            |
+| Technology                | Purpose                             |
+| ------------------------- | ----------------------------------- |
+| Docker + Docker Compose   | Containerization and local dev      |
+| Kubernetes + Minikube     | Container orchestration             |
+| NGINX Ingress             | Load balancing and routing          |
+| HorizontalPodAutoscaler   | Auto-scaling                        |
+| GitHub Actions            | CI/CD pipeline                      |
+| GitHub Container Registry | Docker image storage and versioning |
+| pnpm workspaces           | Monorepo management                 |
 
 ## 📁 Project Structure
 
@@ -96,7 +97,7 @@ devboard/
 
 ## 🚀 Getting Started
 
-## Prerequisites
+### Prerequisites
 
 - Node.js 24+
 - pnpm 11+
@@ -112,6 +113,10 @@ DevBoard integrates with Anthropic's Claude API for two features:
 - **Goal Breakdown** — describe a high-level goal and Claude breaks it into up to 6 actionable tasks
 
 To enable AI features, add your Anthropic API key to `apps/backend/.env`:
+
+`ANTHROPIC_API_KEY=sk-ant-your-key-here`
+
+Without a key the app works fully — AI features silently do nothing.
 
 ### Local Development
 
@@ -156,6 +161,13 @@ pnpm dev:all
 ```
 
 Open `http://localhost:5173`
+
+**7. Verify everything is running:**
+
+```bash
+curl http://localhost:3001/health
+curl http://localhost:3001/ready
+```
 
 **Test credentials (after running seed):**
 
@@ -236,11 +248,54 @@ Open `http://devboard.local`
 | POST   | `/api/ai/generate-description` | Generate task description | Yes  |
 | POST   | `/api/ai/breakdown`            | Break goal into tasks     | Yes  |
 
+## 🔍 Observability
+
+### Health Endpoints
+
+| Endpoint      | Purpose                                      | Used By             |
+| ------------- | -------------------------------------------- | ------------------- |
+| `GET /health` | Liveness check — is the server running?      | K8s liveness probe  |
+| `GET /ready`  | Readiness check — is the database connected? | K8s readiness probe |
+
+### Logging
+
+The backend uses [Pino](https://getpino.io) for structured logging:
+
+- **Development** — human readable colored output via `pino-pretty`
+- **Production** — JSON output parseable by log aggregation tools
+
+Every request is logged with method, URL, status code and duration:
+
+```json
+{
+  "method": "POST",
+  "url": "/api/auth/login",
+  "status": 200,
+  "duration": "12ms"
+}
+```
+
+### Kubernetes Observability
+
+- **HorizontalPodAutoscaler** — scales backend from 2 to 5 pods based on CPU
+- **Liveness probe** — restarts unhealthy pods automatically
+- **Readiness probe** — removes pods from load balancer when database is unavailable
+- **Metrics server** — collects CPU and memory metrics across all pods
+
 ## 🧪 Running Tests
 
 ```bash
 pnpm test
 ```
+
+## 🗺 Roadmap
+
+- [ ] Task comments and activity log
+- [ ] Board sharing and multi-user collaboration
+- [ ] Email notifications
+- [ ] Dark/light theme toggle
+- [ ] Task due dates and priorities
+- [ ] Export board to PDF
 
 ## 📄 License
 
