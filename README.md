@@ -1,6 +1,6 @@
 # DevBoard
 
-[![CI](https://github.com/Asmatchd/devboard/actions/workflows/ci.yml/badge.svg)](https://github.com/Asmatchd/devboard/actions/workflows/ci.yml)
+[![CI](https://github.com/Asmatchd/devboard/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Asmatchd/devboard/actions/workflows/ci.yml)
 
 A full-stack kanban-style task management application built with modern technologies. This project demonstrates production-grade software engineering practices including containerization, orchestration, and AI integration.
 
