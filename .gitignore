@@ -6,3 +6,4 @@ dist/
 .DS_Store
 .pnpm-store/
 k8s/backend/secret.yaml
+.vscode/
