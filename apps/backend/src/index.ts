@@ -1,6 +1,11 @@
 import { app } from "./app";
 import { env } from "./config/env";
+import { logger } from "./middleware/requestLogger";
 
 app.listen(env.PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${env.PORT}`);
+  logger.info({
+    message: "Server running",
+    port: env.PORT,
+    environment: env.NODE_ENV,
+  });
 });

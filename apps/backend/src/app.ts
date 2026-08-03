@@ -1,18 +1,51 @@
 import express from "express";
 import cors from "cors";
 import { errorHandler } from "./middleware/errorHandler";
+import { requestLogger, logger } from "./middleware/requestLogger";
 import authRoutes from "./routes/auth";
 import taskRoutes from "./routes/tasks";
 import aiRoutes from "./routes/ai";
+import { db } from "./db/database";
 
 export const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production" ? "*" : "http://localhost:5173",
+  }),
+);
 app.use(express.json());
+app.use(requestLogger);
 
-// Health check endpoint
+// Health check — is the server running?
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV,
+  });
+});
+
+// Readiness check — is the server ready to accept traffic?
+// Checks database connectivity
+app.get("/ready", async (req, res) => {
+  try {
+    await db.selectFrom("users").select("id").limit(1).execute();
+    res.json({
+      status: "ready",
+      timestamp: new Date().toISOString(),
+      database: "connected",
+    });
+  } catch (error) {
+    logger.error({ error }, "Database connection failed");
+    res.status(503).json({
+      status: "not ready",
+      timestamp: new Date().toISOString(),
+      database: "disconnected",
+    });
+  }
 });
 
 // Routes
