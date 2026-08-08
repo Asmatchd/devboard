@@ -21,6 +21,7 @@ import { CreateTaskModal } from "../components/CreateTaskModal";
 import { AIModal } from "../components/AIModal";
 import { Button } from "../components/ui/Button";
 import { taskService } from "../services/tasks";
+import { useAuthStore } from "../store/authStore";
 
 const COLUMNS: { id: TaskStatus; title: string }[] = [
   { id: "todo", title: "To Do" },
@@ -43,9 +44,12 @@ export function BoardPage() {
     }),
   );
 
+  const { token } = useAuthStore();
+
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: taskService.getAll,
+    enabled: !!token, // Only fetch when token exists
   });
 
   const getTasksByStatus = (status: TaskStatus): Task[] =>

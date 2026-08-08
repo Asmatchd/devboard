@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useAuthStore } from "../store/authStore";
 import { Button } from "./ui/Button";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,6 +9,12 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const { user, logout } = useAuthStore();
+  const queryClient = useQueryClient();
+
+  const handleLogout = () => {
+    queryClient.clear(); // Clear all cached queries
+    logout();
+  };
 
   return (
     <div className="min-h-screen bg-(--color-background)">
@@ -49,7 +56,7 @@ export function Layout({ children }: LayoutProps) {
                 {user.name}
               </span>
             )}
-            <Button variant="ghost" size="sm" onClick={logout}>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
               Sign out
             </Button>
           </div>

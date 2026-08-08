@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { authService } from "../services/auth";
@@ -8,6 +9,7 @@ import { useAuthStore } from "../store/authStore";
 export function LoginPage() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const queryClient = useQueryClient();
 
   const [mode, setMode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
@@ -36,6 +38,10 @@ export function LoginPage() {
           : await authService.register(form.email, form.name, form.password);
 
       setAuth(result.data.token, result.data.user);
+
+      // Invalidate tasks query so it refetches with the new token
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+
       navigate("/");
     } catch (err: unknown) {
       const axiosError = err as { response?: { data?: { error?: string } } };
