@@ -13,6 +13,7 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   assigneeId?: string;
+  createdBy?: string;
   createdAt: string;
   updatedAt: string;
 }

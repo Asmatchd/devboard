@@ -36,6 +36,13 @@ async function migrate() {
       )
     `);
 
+    // Add created_by column if it doesn't exist
+    // Uses IF NOT EXISTS pattern so migration is safe to run multiple times
+    await client.query(`
+      ALTER TABLE tasks
+      ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES users(id) ON DELETE CASCADE
+    `);
+
     // Auto-update updated_at on task changes
     await client.query(`
       CREATE OR REPLACE FUNCTION update_updated_at()

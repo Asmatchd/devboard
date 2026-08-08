@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { z } from "zod";
 import { db } from "../db/database";
-import { AuthRequest } from "../middleware/auth";
+import type { AuthRequest } from "../middleware/auth";
 
 const createTaskSchema = z.object({
   title: z.string().min(1),
@@ -18,9 +18,11 @@ const updateTaskSchema = z.object({
 });
 
 export async function getTasks(req: AuthRequest, res: Response): Promise<void> {
+  // Only return tasks created by the logged-in user
   const tasks = await db
     .selectFrom("tasks")
     .selectAll()
+    .where("created_by", "=", req.userId!)
     .orderBy("created_at", "desc")
     .execute();
 
@@ -31,13 +33,17 @@ export async function getTasks(req: AuthRequest, res: Response): Promise<void> {
       description: t.description,
       status: t.status,
       assigneeId: t.assignee_id,
+      createdBy: t.created_by,
       createdAt: t.created_at,
       updatedAt: t.updated_at,
     })),
   });
 }
 
-export async function createTask(req: AuthRequest, res: Response): Promise<void> {
+export async function createTask(
+  req: AuthRequest,
+  res: Response,
+): Promise<void> {
   const body = createTaskSchema.parse(req.body);
 
   const task = await db
@@ -47,6 +53,7 @@ export async function createTask(req: AuthRequest, res: Response): Promise<void>
       description: body.description ?? null,
       status: body.status,
       assignee_id: body.assigneeId ?? null,
+      created_by: req.userId!,
     })
     .returningAll()
     .executeTakeFirstOrThrow();
@@ -58,13 +65,17 @@ export async function createTask(req: AuthRequest, res: Response): Promise<void>
       description: task.description,
       status: task.status,
       assigneeId: task.assignee_id,
+      createdBy: task.created_by,
       createdAt: task.created_at,
       updatedAt: task.updated_at,
     },
   });
 }
 
-export async function updateTask(req: AuthRequest, res: Response): Promise<void> {
+export async function updateTask(
+  req: AuthRequest,
+  res: Response,
+): Promise<void> {
   const { id } = req.params;
   const body = updateTaskSchema.parse(req.body);
 
@@ -74,10 +85,12 @@ export async function updateTask(req: AuthRequest, res: Response): Promise<void>
   if (body.status !== undefined) updateData.status = body.status;
   if (body.assigneeId !== undefined) updateData.assignee_id = body.assigneeId;
 
+  // Only update tasks owned by the logged-in user
   const task = await db
     .updateTable("tasks")
     .set(updateData)
     .where("id", "=", id)
+    .where("created_by", "=", req.userId!)
     .returningAll()
     .executeTakeFirst();
 
@@ -93,18 +106,24 @@ export async function updateTask(req: AuthRequest, res: Response): Promise<void>
       description: task.description,
       status: task.status,
       assigneeId: task.assignee_id,
+      createdBy: task.created_by,
       createdAt: task.created_at,
       updatedAt: task.updated_at,
     },
   });
 }
 
-export async function deleteTask(req: AuthRequest, res: Response): Promise<void> {
+export async function deleteTask(
+  req: AuthRequest,
+  res: Response,
+): Promise<void> {
   const { id } = req.params;
 
+  // Only delete tasks owned by the logged-in user
   const task = await db
     .deleteFrom("tasks")
     .where("id", "=", id)
+    .where("created_by", "=", req.userId!)
     .returningAll()
     .executeTakeFirst();
 

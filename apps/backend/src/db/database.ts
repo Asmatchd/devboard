@@ -6,8 +6,13 @@ interface TaskTable {
   id: Generated<string>;
   title: string;
   description: string | null;
-  status: ColumnType<"todo" | "in_progress" | "done", "todo" | "in_progress" | "done" | undefined, "todo" | "in_progress" | "done">;
+  status: ColumnType<
+    "todo" | "in_progress" | "done",
+    "todo" | "in_progress" | "done" | undefined,
+    "todo" | "in_progress" | "done"
+  >;
   assignee_id: string | null;
+  created_by: string | null;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
